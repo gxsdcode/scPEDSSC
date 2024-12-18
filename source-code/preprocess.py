@@ -170,12 +170,14 @@ def cosine(data):
 
 def euclidean(data):
     dist = 1 - pairwise_distances(data, metric='euclidean')
+    # dist transform sim
+    # sim = np.exp(-dist/dist.max())
     return np.where((dist <= 1) & (dist >= 0), dist, np.zeros(dist.shape))
 
 
 def pearson(data):
     df = pd.DataFrame(data.T)
-    pear_ = df.corr(method='pearson')
+    pear_ = df.corr(method='pearson')  # 返回的是列与列之间的相关系数，所以提前使用转置，将细胞*基因的矩阵转为基因*细胞，列表示细胞
     return np.where(pear_ >= 0, pear_, np.zeros(shape=pear_.shape))
 
 
@@ -193,7 +195,9 @@ def l_gene_select_combine(ssc_score, pear_score, spear_score, cos_score):
     score_set = [ssc_score, pear_score, spear_score, cos_score]
     gene_inter, gene_inter_num = [], []
     for i in range(4):
+        # ascend sort
         score, sort_ind = np.sort(score_set[i]), np.argsort(score_set[i])
+        # descend sort
         score, sort_ind = score[::-1], sort_ind[::-1]
         gene_num = len(score_set[i])
         thresh1 = int(np.round(0.1 * gene_num))
@@ -207,11 +211,11 @@ def l_gene_select_combine(ssc_score, pear_score, spear_score, cos_score):
             var2 = score2.var()
             gene_var[j] = var1 + var2
         gene_var[:thresh1] = np.inf
-        select_index = np.argmin(gene_var)
-        gene_inter.append(sort_ind[:select_index])
-        gene_inter_num.append(select_index)
+        select_index = np.argmin(gene_var)  # 取最小值对应的索引值
+        gene_inter.append(sort_ind[:select_index])  # 取出了前t个基因
+        gene_inter_num.append(select_index)  # 取出的基因数量
 
-    gene_slect_ssc_pear = np.intersect1d(gene_inter[0], gene_inter[1])
+    gene_slect_ssc_pear = np.intersect1d(gene_inter[0], gene_inter[1])  # 取两个数组中相同的值
     gene_slect_ssc_spear = np.intersect1d(gene_inter[0], gene_inter[2])
     gene_slect_ssc_cos = np.intersect1d(gene_inter[0], gene_inter[3])
     # combine
@@ -227,13 +231,14 @@ def l_gene_select_combine(ssc_score, pear_score, spear_score, cos_score):
 
 def l_choose_edge_combine(pear_sim, spear_sim, cos_sim):
     m, n = pear_sim.shape[0], pear_sim.shape[1]
+    # print("m,n:", (m, n))
     if m > 5000:
         edge_num = 100
     else:
         edge_num = int(np.round(m * 0.1))
 
-    index1 = np.argsort(pear_sim, axis=1)
-    pear_index = index1[:, -edge_num:]
+    index1 = np.argsort(pear_sim, axis=1)  # 按列从小到大排序
+    pear_index = index1[:, -edge_num:]  # 取后num个索引，相当于取出相似度大的细胞
 
     index2 = np.argsort(spear_sim, axis=1)
     spear_index = index2[:, -edge_num:]
@@ -265,6 +270,7 @@ def l_choose_edge_combine(pear_sim, spear_sim, cos_sim):
 def l_enhance(data, select_edge):
     data = np.abs(data)
     m, n = data.shape[0], data.shape[1]
+    test_data = data.copy()
 
     RA_score = np.zeros((m, n))
     WRA_score = np.zeros((m, n))
@@ -307,34 +313,60 @@ def spectralclustering(data, n_clusters):
     return clf.fit_predict(kerNS)
 
 
-data = pd.read_csv('Haber.csv', header=None)
+data = pd.read_csv('Darmanis.csv', header=None)
+# data = np.transpose(data)
 data = np.array(data)
-label = pd.read_csv('Haber_label.csv', header=None)
+label = pd.read_csv('Darmanis_label.csv', header=None)
 label = np.array(label)
 label = label.ravel()
 
+'''
+data_mat = h5py.File('CITE_CBMC_counts_top2000.h5')
+data = np.array(data_mat['X'])
+# data = data.T
+label = np.array(data_mat['Y'])
+data_mat.close()
+label = label.ravel()
+'''
+'''
+data = pd.read_table('Test_9_Yan.txt', header=None, sep='\t')
+data = np.array(data)
+label = pd.read_table('Test_9_Yan_label.txt', header=None, sep='\t')
+label = np.array(label)
+label = label.ravel()
+'''
+
+# 计算对相似性
 n_clusters = len(set(label))
 data = filter_genes_zero(data)  # row is a cell
 pairwise_data0 = data
 pear_sim0, spear_sim0, cos_sim0, _ = all_similarities(pairwise_data0)
 
+# 计算基因分数
 pear_score = LaplacianScore(pairwise_data0, pear_sim0)
 spear_score = LaplacianScore(pairwise_data0, spear_sim0)
 cos_score = LaplacianScore(pairwise_data0, cos_sim0)
 
+# 计算稀疏相似性
 ssc_data0, _ = matrixNormalize(data.T)  # (features, samples)
 CMat3 = admmLasso_mat_func(ssc_data0, False, 10)
 C0 = np.abs(CMat3) + np.abs(CMat3.T)
 ssc_score = LaplacianScore(ssc_data0.T, C0)
 
-# 基因选择
-gene_select, gene_slect_combine, _ = l_gene_select_combine(ssc_score, pear_score, spear_score, cos_score)
+# 调和均值计算
+select_Laplacianscore = (4 * pear_score * spear_score * cos_score * ssc_score) / (
+        pear_score + spear_score + cos_score + ssc_score)
 
-gene_select_pre = np.sort(gene_slect_combine[5])
-gene_select_pre = gene_select_pre[:2000]
-data_pre = data[:, gene_select_pre]
+indexed_array = list(enumerate(select_Laplacianscore))
+sorted_indexed_array = sorted(indexed_array, key=lambda x: x[1], reverse=True)
+sorted_indices = [x[0] for x in sorted_indexed_array]
 
-with open('Haber_pre2000.csv', 'w', newline='', encoding='utf-8') as f:
+gene_select = sorted_indices[:2000]
+data_select = data[:, gene_select]
+print("data_select.shape:", data_select.shape)
+
+with open('Pollen_select1.csv', 'w', newline='', encoding='utf-8') as f:
     writer = csv.writer(f)
-    for row in data_pre:
+    for row in data_select:
         writer.writerow(row)
+    print("finish!")
