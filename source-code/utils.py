@@ -201,6 +201,7 @@ def post_proC(C, K):
     grp = spectral.fit_predict(L) + 1  # 返回数据集预测标签
     return grp, L
 
+
 def Conformal_mapping(X):
     a = np.zeros(X.shape[1])
     for i in range(0, X.shape[1]):
