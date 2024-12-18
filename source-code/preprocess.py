@@ -365,7 +365,7 @@ gene_select = sorted_indices[:2000]
 data_select = data[:, gene_select]
 print("data_select.shape:", data_select.shape)
 
-with open('Pollen_select1.csv', 'w', newline='', encoding='utf-8') as f:
+with open('Darmanis_select1.csv', 'w', newline='', encoding='utf-8') as f:
     writer = csv.writer(f)
     for row in data_select:
         writer.writerow(row)
