@@ -34,6 +34,7 @@ with open('Darmanis_select1.csv', 'w', newline='', encoding='utf-8') as f:
         writer.writerow(row)
 ```
 Step2:The processed data Darmanis_select1.csv along with Darmanis_label.csv as input to main.py and run it to get the clustering results for the corresponding dataset.
+
 input:
 ```python
 x_hat = pd.read_csv('Darmanis_select1.csv', header=None)
