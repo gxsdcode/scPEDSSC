@@ -47,7 +47,7 @@ output:
 eva(y, pred_label_hat)
 ```
 ## Comparison methods
-The source code download links for the comparison methods in the scPEDSSC methodology are listed here, and the detailed steps and code for using each method can be found in the detailed descriptions on the website. The NMF and SIMLR methods are given together in scBAKP
+The source code download links for the comparison methods in the scPEDSSC methodology are listed here, and the detailed steps and code for using each method can be found in the detailed descriptions on the website. The NMF and SIMLR methods are given together in scBAKP.
 
 scCCL:https://github.com/LuckyxiaoLin/ScCCL.
 
