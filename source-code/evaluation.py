@@ -31,4 +31,4 @@ def eva(y_true, y_pred, epoch=0, pp=True):
     ari = ari_score(y_true, y_pred)
     if pp:
         print(epoch, ':acc {:.4f}'.format(acc), ', nmi {:.4f}'.format(nmi), ', ari {:.4f}'.format(ari))
-    return acc, nmi, ari
+    return nmi, ari
