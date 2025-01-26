@@ -22,7 +22,13 @@ pip install scanpy 1.9.3
 ```
 
 ## Program execution process 
-After downloading the datasets and codes locally, open the preprocess.py and main.py files in the PyCharm client. The first step is to preprocess the data, take the “X.csv” file as the input to the preprocess.py program and run it to get the preprocessed data file “X_select1.csv”. The second step is to use the preprocessed data file “X_select1.csv” and the label file “X_label.csv” as the input to the main.py program, and run it to get the results nmi and ari,where X is the specific name of the dataset.Take the Darmanis dataset as an example. 
+1.You need to download the datasets and codes locally.
+
+2.Open the preprocess.py file in the PyCharm client.Take the “X.csv” file as the input to the preprocess.py program and run it to get the preprocessed data file “X_select1.csv”. 
+
+3.Open the main.py file in the PyCharm client.Take the preprocessed data file “X_select1.csv” and the label file “X_label.csv” as the input to the main.py program, and run it to get the results nmi and ari,where X is the specific name of the dataset.
+
+Take the Darmanis dataset as an example. 
 
 Step1:Open the preprocess.py file in the PyCharm client and change the portion of the file that codes for reading data to the name of the dataset to be preprocessed. The code in the file that reads the data is as follows:
 
