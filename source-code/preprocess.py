@@ -316,9 +316,9 @@ def spectralclustering(data, n_clusters):
 data = pd.read_csv('Darmanis.csv', header=None)
 # data = np.transpose(data)
 data = np.array(data)
-label = pd.read_csv('Darmanis_label.csv', header=None)
-label = np.array(label)
-label = label.ravel()
+# label = pd.read_csv('Darmanis_label.csv', header=None)
+# label = np.array(label)
+# label = label.ravel()
 
 '''
 data_mat = h5py.File('CITE_CBMC_counts_top2000.h5')
