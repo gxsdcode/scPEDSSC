@@ -28,7 +28,7 @@ pip install scanpy 1.9.3
 
 3.Open the main.py file in the PyCharm client.Take the preprocessed data file “X_select1.csv” and the label file “X_label.csv” as the input to the main.py program, and run it to get the results nmi and ari,where X is the specific name of the dataset.
 
-Take the Darmanis dataset as an example. 
+Here,take the Darmanis dataset as an example. 
 
 Step1:Open the preprocess.py file in the PyCharm client and change the portion of the file that codes for reading data to the name of the dataset to be preprocessed. The code in the file that reads the data is as follows:
 
