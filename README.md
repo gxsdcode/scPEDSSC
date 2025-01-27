@@ -30,15 +30,14 @@ pip install scanpy 1.9.3
 
 Here,take the Darmanis dataset as an example. 
 
-Step1:Open the preprocess.py file in the PyCharm client and change the portion of the file that codes for reading data to the name of the dataset to be preprocessed. The code in the file that reads the data is as follows:
+Step1:Open the preprocess.py file in the PyCharm client. Replace the first parameter of functoin "pd.read_csv" with file "Darmanis.csv". Run file preprocess.py in the PyCharm client to get the preprocessed data file "Darmanis_select1.csv".
 
 ```python
 data = pd.read_csv('Darmanis.csv', header=None)
 data = np.array(data)
 ```
-Here, we take the Darmanis dataset as an example, so the data read is "Darmanis.csv".After modifying the required data files, run the extent in the PyCharm client to get the preprocessed file "Darmanis_select1.csv".
 
-Step2:Use the preprocessed dataset "Darmanis_select1.csv" and labels "Darmanis_label.csv" as input to the main.py file, and just modify the corresponding read file section in the PyCharm client. The code for the read section is as follows:
+Step2: Open the main.py file in the PyCharm client. Replace the first parameter of functoin "pd.read_csv" with files "Darmanis_select1.csv" and "Darmanis_label.csv" respectively. Run file main.py in the PyCharm client to get the final clustering results.
 
 ```python
 x_hat = pd.read_csv('Darmanis_select1.csv', header=None)
@@ -47,24 +46,36 @@ y = pd.read_csv('Darmanis_label.csv', header=None)
 y = np.array(y)
 y = y.ravel()
 ```
-Next, run the program in the PyCharm client to get the final clustering results.The final result output is as follows:
+The final output is as follows:
 
 ```
-nmi 0.861 , ari 0.886
+NMI 0.861 , ARI 0.886
 ```
 
 
 ## Comparison methods
-The source code download links for the comparison methods in the scPEDSSC methodology are listed here, and the detailed steps and code for using each method can be found in the detailed descriptions on the website. The NMF and SIMLR methods are given together in scBAKP.
+The source code of comparison methods can be downloaded from the following websites.
 
-scCCL:https://github.com/LuckyxiaoLin/ScCCL.
+scCCL:
 
-scBKAP:https://github.com/YuBinLab-QUST/scBKAP.
+https://github.com/LuckyxiaoLin/ScCCL.
 
-scMCKC:https://github.com/leaf233/scMCKC.
+scBKAP, NMF and SIMLR:
 
-scDCC:https://github.com/ttgump/scDCC.
+https://github.com/YuBinLab-QUST/scBKAP.
 
-scDSSC:https://github.com/WHY-17/scDSSC.
+scMCKC:
 
-SSRE:https://github.com/CSUBioGroup/SSRE.
+https://github.com/leaf233/scMCKC.
+
+scDCC:
+
+https://github.com/ttgump/scDCC.
+
+scDSSC:
+
+https://github.com/WHY-17/scDSSC.
+
+SSRE:
+
+https://github.com/CSUBioGroup/SSRE.
