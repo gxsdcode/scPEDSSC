@@ -30,5 +30,5 @@ def eva(y_true, y_pred, epoch=0, pp=True):
     # nmi = np.round(metrics.normalized_mutual_info_score(y_true, y_pred), 5)
     ari = ari_score(y_true, y_pred)
     if pp:
-        print(nmi {:.4f}'.format(nmi), ', ari {:.4f}'.format(ari))
+        print(NMI {:.4f}'.format(nmi), ', ARI {:.4f}'.format(ari))
     return nmi, ari
